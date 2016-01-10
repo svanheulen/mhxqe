@@ -80,7 +80,7 @@ function linkInput(element, type, buffer, offset, length) {
             }
             element.value = item.getUint32(0, true);
             element.addEventListener("change", function (event) {
-                this.setiUint32(0, event.currentTarget.value, true);
+                this.setUint32(0, event.currentTarget.value, true);
             }.bind(item));
             return element;
         case "float":

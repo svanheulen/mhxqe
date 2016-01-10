@@ -7,6 +7,8 @@ Current limitations:
     * You have to use other software to proxy quests to the game.
 
 To use the quest editor visit: http://svanheulen.github.io/mhxqe
+When the page loads, use the "Browse..." button to open a quest file from your
+computer to edit.
 
 This project uses these third party libraries:
     https://github.com/nodeca/pako
