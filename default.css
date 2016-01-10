@@ -1,0 +1,52 @@
+.hidden {
+    display: none;
+}
+
+header, table {
+    width: 1000px;
+    margin: auto;
+    border-spacing: 0;
+}
+
+th {
+    font-size: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+caption {
+    font-size: 14px;
+}
+
+tr:nth-child(odd) {
+    background: #ccc;
+}
+
+tr:nth-child(even) {
+    background: #eee;
+}
+
+#quest_data th, #gui_message th, #set_em_main th {
+    text-align: right;
+    width: 1%;
+    white-space: nowrap;
+}
+
+#archive tr td:last-child, #em_set_list tr td:first-child, #rem table:last-child tr td:first-child, #supply_list tr td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+input[type="number"], input[type="text"], textarea {
+    width: 99%;
+}
+
+h1 {
+    font-size: 14px;
+    text-align: center;
+}
+
+#save {
+    float: right;
+}
+

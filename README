@@ -1,0 +1,17 @@
+Current limitations:
+    * Only works with decrypted DLC quests.
+    * You can only modify what's already in the quest.
+    * Many of the settings don't have very good descriptions.
+    * Many of the item/monster ID settings don't have dropdowns.
+    * Small monster info is left in hex because the format is unknown.
+    * You have to use other software to proxy quests to the game.
+
+To use the quest editor visit: http://svanheulen.github.io/mhxqe
+
+This project uses these third party libraries:
+    https://github.com/nodeca/pako
+    https://github.com/eligrey/FileSaver.js
+
+Licenses for third party libraries can be found in the THIRD_PARTY_LICENSES
+file in this repository.
+
