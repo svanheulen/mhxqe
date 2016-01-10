@@ -47,18 +47,18 @@ function linkInput(element, type, buffer, offset, length) {
             var item = new Uint8Array(buffer, offset, 1);
             if (element.type == "checkbox") {
                 element.checked = item[0];
-                element.addEventListener("change", function (event) {
+                element.onchange = function (event) {
                     this[0] = event.currentTarget.checked;
-                }.bind(item));
+                }.bind(item);
             } else {
                 if (element.type == "number") {
                     element.min = 0;
                     element.max = 0xff;
                 }
                 element.value = item[0];
-                element.addEventListener("change", function (event) {
+                element.onchange = function (event) {
                     this[0] = event.currentTarget.value;
-                }.bind(item));
+                }.bind(item);
             }
             break;
         case "short":
@@ -68,9 +68,9 @@ function linkInput(element, type, buffer, offset, length) {
                 element.max = 0xffff;
             }
             element.value = item.getUint16(0, true);
-            element.addEventListener("change", function (event) {
+            element.onchange = function (event) {
                 this.setUint16(0, event.currentTarget.value, true);
-            }.bind(item));
+            }.bind(item);
             break;
         case "int":
             var item = new DataView(buffer, offset, 4);
@@ -79,25 +79,25 @@ function linkInput(element, type, buffer, offset, length) {
                 element.max = 0xffffffff;
             }
             element.value = item.getUint32(0, true);
-            element.addEventListener("change", function (event) {
+            element.onchange = function (event) {
                 this.setUint32(0, event.currentTarget.value, true);
-            }.bind(item));
+            }.bind(item);
             return element;
         case "float":
             var item = new DataView(buffer, offset, 4);
             element.value = item.getFloat32(0, true);
-            element.addEventListener("change", function (event) {
+            element.onchange = function (event) {
                 this.setFloat32(0, event.currentTarget.value, true);
-            }.bind(item));
+            }.bind(item);
             break;
         case "string":
             var item = new Uint8Array(buffer, offset, length);
             element.maxLength = length;
             element.size = length;
             element.value = readString(item);
-            element.addEventListener("change", function (event) {
+            element.onchange = function (event) {
                 writeString(this, event.currentTarget.value);
-            }.bind(item));
+            }.bind(item);
             return element;
         case "hex":
             var item = new Uint8Array(buffer, offset, length);
@@ -105,9 +105,9 @@ function linkInput(element, type, buffer, offset, length) {
             element.maxLength = length * 2;
             element.size = length * 2;
             element.value = readHex(item);
-            element.addEventListener("change", function (event) {
+            element.onchange = function (event) {
                 writeHex(this, event.currentTarget.value);
-            }.bind(item));
+            }.bind(item);
             return element;
     }
 }
@@ -214,15 +214,15 @@ rArchive.prototype.loadFile = function () {
         var new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
         new_element.type = "text";
         new_element.value = this.files[i].file_name;
-        new_element.addEventListener("change", function (event) {
+        new_element.onchange = function (event) {
             this.file_name = event.currentTarget.value;
-        }.bind(this.files[i]));
+        }.bind(this.files[i]);
         new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
         new_element.type = "button";
         new_element.value = "Edit...";
-        new_element.addEventListener("click", function (event) {
+        new_element.onclick = function (event) {
             this.loadFile();
-        }.bind(this.files[i]));
+        }.bind(this.files[i]);
     }
     document.getElementById("archive").removeAttribute("class");
 }
@@ -521,53 +521,53 @@ rGUIMessage.prototype.loadFile = function () {
     document.getElementById("supply_list").className = "hidden";
     var element = document.getElementById("internal_name");
     element.value = this.internal_name;
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.internal_name = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("unknown");
     element.value = this.messages[0];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[0] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("title");
     element.value = this.messages[1];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[1] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("main_objective");
     element.rows = 2;
     element.value = this.messages[5];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[5] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("subquest");
     element.value = this.messages[7];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[7] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("main_monsters");
     element.rows = 2;
     element.value = this.messages[4];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[4] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("failure");
     element.rows = 2;
     element.value = this.messages[6];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[6] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("client");
     element.value = this.messages[2];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[2] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     element = document.getElementById("summary");
     element.rows = 7;
     element.value = this.messages[3];
-    element.addEventListener("change", function (event) {
+    element.onchange = function (event) {
         this.messages[3] = event.currentTarget.value;
-    }.bind(this));
+    }.bind(this);
     document.getElementById("gui_message").removeAttribute("class");
 }
 
@@ -828,8 +828,8 @@ rSupplyList.prototype.loadFile = function () {
 var archive = null;
 
 window.onload = function () {
-    document.getElementById("open").addEventListener("change", open_file);
-    document.getElementById("save").addEventListener("click", save_file);
+    document.getElementById("open").onchange = open_file;
+    document.getElementById("save").onclick = save_file;
     fillSelect(document.getElementById("mQuestNo"), quest_id_list);
     fillSelect(document.getElementById("mQuestType"), quest_type_list);
     fillSelect(document.getElementById("mRequestVillage"), village_list);
@@ -882,10 +882,10 @@ window.onload = function () {
 
 function open_file() {
     var file = new FileReader();
-    file.addEventListener("load", function () {
+    file.onload = function () {
         archive = new rArchive(this.result);
         archive.loadFile();
-    });
+    };
     file.readAsArrayBuffer(this.files[0]);
 }
 
