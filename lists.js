@@ -293,6 +293,14 @@ var clear_type_list = [
     {"text": "Unknown", "value": 12}
 ]
 
+var condition_type_list = [
+    {"text": "None", "value": 0},
+    {"text": "Timed", "value": 1},
+    {"text": "Hunt Monster", "value": 2},
+    {"text": "Deliver Item", "value": 3},
+    {"text": "Complete Subquest", "value": 4}
+]
+
 var monster_list = [
     {"text": "None", "value": 0},
     {"text": "Rathian (リオレイア)", "value": 1},

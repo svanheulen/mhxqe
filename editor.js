@@ -112,6 +112,40 @@ function linkInput(element, type, buffer, offset, length) {
     }
 }
 
+function linkObjective(target, element) {
+    target.addEventListener("change", function (event) {
+        switch (event.currentTarget.value) {
+            case "1":
+            case "2":
+            case "4":
+            case "8":
+            case "9":
+                fillSelect(element, monster_list);
+                break;
+            case "5":
+                fillSelect(element, item_list);
+                break;
+            default:
+                fillSelect(element, [{"text": "NA", "value": 0}]);
+        }
+    }.bind(element));
+}
+
+function linkCondition(target, element) {
+    target.addEventListener("change", function (event) {
+        switch (event.currentTarget.value) {
+            case "2":
+                fillSelect(element, monster_list);
+                break;
+            case "3":
+                fillSelect(element, item_list);
+                break;
+            default:
+                fillSelect(element, [{"text": "NA", "value": 0}]);
+        }
+    }.bind(element));
+}
+
 function fillSelect(element, list) {
     while (element.firstElementChild) {
         element.removeChild(element.firstElementChild);
@@ -293,12 +327,15 @@ rQuestData.prototype.loadFile = function () {
     linkInput(document.getElementById("mClearType"), "char", this.quests[0], 0x21);
     linkInput(document.getElementById("mGekitaiHp"), "char", this.quests[0], 0x22);
     linkInput(document.getElementById("mIsClearParam_1"), "char", this.quests[0], 0x23);
+    document.getElementById("mIsClearParam_1").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mClearID_1"), "short", this.quests[0], 0x24);
     linkInput(document.getElementById("mClearNum_1"), "short", this.quests[0], 0x26);
     linkInput(document.getElementById("mClearParam_2"), "int", this.quests[0], 0x28);
+    document.getElementById("mClearParam_2").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mClearID_2"), "short", this.quests[0], 0x2c);
     linkInput(document.getElementById("mClearNum_2"), "short", this.quests[0], 0x2e);
     linkInput(document.getElementById("mSubClearType"), "int", this.quests[0], 0x30);
+    document.getElementById("mSubClearType").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mClearID_Sub"), "short", this.quests[0], 0x34);
     linkInput(document.getElementById("mClearNum_Sub"), "short", this.quests[0], 0x36);
     linkInput(document.getElementById("mHagiLv"), "char", this.quests[0], 0x38);
@@ -318,10 +355,12 @@ rQuestData.prototype.loadFile = function () {
     linkInput(document.getElementById("mRemAddLotMax"), "char", this.quests[0], 0x61);
     linkInput(document.getElementById("mSuppLabel_1"), "char", this.quests[0], 0x62);
     linkInput(document.getElementById("mSuppType_1"), "char", this.quests[0], 0x63);
+    document.getElementById("mSuppType_1").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mSuppTarget_1"), "int", this.quests[0], 0x64);
     linkInput(document.getElementById("mSuppTargetNum_1"), "int", this.quests[0], 0x68);
     linkInput(document.getElementById("mSuppLabel_2"), "char", this.quests[0], 0x6c);
     linkInput(document.getElementById("mSuppType_2"), "char", this.quests[0], 0x6d);
+    document.getElementById("mSuppType_2").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mSuppTarget_2"), "int", this.quests[0], 0x6e);
     linkInput(document.getElementById("mSuppTargetNum_2"), "int", this.quests[0], 0x72);
     linkInput(document.getElementById("mEmType_1"), "int", this.quests[0], 0x76);
@@ -384,16 +423,20 @@ rQuestData.prototype.loadFile = function () {
     linkInput(document.getElementById("mZakoOther"), "int", this.quests[0], 0xe7);
     linkInput(document.getElementById("mNoZako"), "char", this.quests[0], 0xeb);
     linkInput(document.getElementById("mEmSetType_2"), "char", this.quests[0], 0xec);
+    document.getElementById("mEmSetType_2").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mEmSetTargetID_2"), "int", this.quests[0], 0xed);
     linkInput(document.getElementById("mEmSetTargetNum_2"), "int", this.quests[0], 0xf1);
     linkInput(document.getElementById("mEmSetType_3"), "char", this.quests[0], 0xf5);
+    document.getElementById("mEmSetType_3").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mEmSetTargetID_3"), "int", this.quests[0], 0xf6);
     linkInput(document.getElementById("mEmSetTargetNum_3"), "int", this.quests[0], 0xfa);
     linkInput(document.getElementById("mBossRushType"), "char", this.quests[0], 0xfe);
     linkInput(document.getElementById("mAppearType_1"), "char", this.quests[0], 0xff);
+    document.getElementById("mAppearType_1").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mAppearTargetType_1"), "int", this.quests[0], 0x100);
     linkInput(document.getElementById("mAppearTargetNum_1"), "int", this.quests[0], 0x104);
     linkInput(document.getElementById("mAppearType_2"), "char", this.quests[0], 0x108);
+    document.getElementById("mAppearType_2").dispatchEvent(new Event("change", {}));
     linkInput(document.getElementById("mAppearTargetType_2"), "int", this.quests[0], 0x109);
     linkInput(document.getElementById("mAppearTargetNum_2"), "int", this.quests[0], 0x10d);
     linkInput(document.getElementById("mExtraRand"), "char", this.quests[0], 0x111);
@@ -840,9 +883,23 @@ window.onload = function () {
     fillSelect(document.getElementById("mEntryType_1"), entry_type_list);
     fillSelect(document.getElementById("mEntryType_2"), entry_type_list);
     fillSelect(document.getElementById("mIsClearParam_1"), clear_type_list);
+    linkObjective(document.getElementById("mIsClearParam_1"), document.getElementById("mClearID_1"));
     fillSelect(document.getElementById("mClearParam_2"), clear_type_list);
+    linkObjective(document.getElementById("mClearParam_2"), document.getElementById("mClearID_2"));
     fillSelect(document.getElementById("mSubClearType"), clear_type_list);
-    // add remaining condition selects and have them update target selects
+    linkObjective(document.getElementById("mSubClearType"), document.getElementById("mClearID_Sub"));
+    fillSelect(document.getElementById("mSuppType_1"), condition_type_list);
+    linkCondition(document.getElementById("mSuppType_1"), document.getElementById("mSuppTarget_1"));
+    fillSelect(document.getElementById("mSuppType_2"), condition_type_list);
+    linkCondition(document.getElementById("mSuppType_2"), document.getElementById("mSuppTarget_2"));
+    fillSelect(document.getElementById("mEmSetType_2"), condition_type_list);
+    linkCondition(document.getElementById("mEmSetType_2"), document.getElementById("mEmSetTargetID_2"));
+    fillSelect(document.getElementById("mEmSetType_3"), condition_type_list);
+    linkCondition(document.getElementById("mEmSetType_3"), document.getElementById("mEmSetTargetID_3"));
+    fillSelect(document.getElementById("mAppearType_1"), condition_type_list);
+    linkCondition(document.getElementById("mAppearType_1"), document.getElementById("mAppearTargetType_1"));
+    fillSelect(document.getElementById("mAppearType_2"), condition_type_list);
+    linkCondition(document.getElementById("mAppearType_2"), document.getElementById("mAppearTargetType_2"));
     fillSelect(document.getElementById("mEmType_1"), monster_list);
     fillSelect(document.getElementById("mEmType_2"), monster_list);
     fillSelect(document.getElementById("mEmType_3"), monster_list);
