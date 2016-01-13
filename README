@@ -2,7 +2,6 @@ Current limitations:
     * Only works with decrypted DLC quests.
     * You can only modify what's already in the quest.
     * Many of the settings don't have very good descriptions.
-    * Many of the item/monster ID settings don't have dropdowns.
     * Small monster info is left in hex because the format is unknown.
     * You have to use other software to proxy quests to the game.
 
