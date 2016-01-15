@@ -114,15 +114,15 @@ function linkInput(element, type, buffer, offset, length) {
 
 function linkObjective(target, element) {
     target.addEventListener("change", function (event) {
-        switch (event.currentTarget.value) {
-            case "1":
-            case "2":
-            case "4":
-            case "8":
-            case "9":
+        switch (parseInt(event.currentTarget.value, 10)) {
+            case 1:
+            case 2:
+            case 4:
+            case 8:
+            case 9:
                 fillSelect(element, monster_list);
                 break;
-            case "5":
+            case 5:
                 fillSelect(element, item_list);
                 break;
             default:
@@ -133,11 +133,11 @@ function linkObjective(target, element) {
 
 function linkCondition(target, element) {
     target.addEventListener("change", function (event) {
-        switch (event.currentTarget.value) {
-            case "2":
+        switch (parseInt(event.currentTarget.value)) {
+            case 2:
                 fillSelect(element, monster_list);
                 break;
-            case "3":
+            case 3:
                 fillSelect(element, item_list);
                 break;
             default:
@@ -159,6 +159,9 @@ function fillSelect(element, list) {
 
 var rArchive = function (raw_data) {
     this.files = [];
+    if (raw_data == null) {
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var version = view.getUint16(4, true);
@@ -245,7 +248,11 @@ rArchive.prototype.loadFile = function () {
     }
     for (var i = 0; i < this.files.length; i++) {
         var new_row = table_body.appendChild(document.createElement("tr"));
-        var new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
+        var new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("select"));
+        fillSelect(new_element, file_type_list);
+        new_element.value = this.files[i].file_type;
+        new_element.disabled = "true";
+        new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
         new_element.type = "text";
         new_element.value = this.files[i].file_name;
         new_element.onchange = function (event) {
@@ -253,17 +260,101 @@ rArchive.prototype.loadFile = function () {
         }.bind(this.files[i]);
         new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
         new_element.type = "button";
-        new_element.value = "Edit...";
+        new_element.value = " > ";
         new_element.onclick = function (event) {
             this.loadFile();
         }.bind(this.files[i]);
+        new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
+        new_element.type = "button";
+        new_element.value = " - ";
+        new_element.onclick = function (event) {
+            archive.files.splice(archive.files.indexOf(this), 1);
+            archive.loadFile();
+        }.bind(this.files[i]);
+        new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
+        new_element.type = "button";
+        new_element.value = " ^ ";
+        if (i == 0) {
+            new_element.disabled = "true";
+        } else {
+            new_element.onclick = function (event) {
+                var file_index = archive.files.indexOf(this);
+                var temp_file = archive.files[file_index];
+                archive.files[file_index] = archive.files[file_index - 1];
+                archive.files[file_index - 1] = temp_file;
+                archive.loadFile();
+            }.bind(this.files[i]);
+        }
+        new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
+        new_element.type = "button";
+        new_element.value = " v ";
+        if (i == this.files.length - 1) {
+            new_element.disabled = "true";
+        } else {
+            new_element.onclick = function (event) {
+                var file_index = archive.files.indexOf(this);
+                var temp_file = archive.files[file_index];
+                archive.files[file_index] = archive.files[file_index + 1];
+                archive.files[file_index + 1] = temp_file;
+                archive.loadFile();
+            }.bind(this.files[i]);
+        }
     }
     document.getElementById("archive").removeAttribute("class");
+}
+
+rArchive.prototype.addFile = function (file_type) {
+    switch (parseInt(file_type, 10)) {
+        case rQuestData.prototype.file_type:
+            this.files.push(new rQuestData(null, "quest\\questData\\questData_1010001"));
+            break;
+        case rGUIMessage.prototype.file_type:
+            this.files.push(new rGUIMessage(null, "quest\\questData\\questData_1010001_jpn"));
+            break;
+        case rSetEmMain.prototype.file_type:
+            this.files.push(new rSetEmMain(null, "quest\\boss\\setEmMain\\b_m00em000_00"));
+            break;
+        case rEmSetList.prototype.file_type:
+            this.files.push(new rEmSetList(null, "quest\\zako\\emSetList\\z_m00d_000"));
+            break;
+        case rRem.prototype.file_type:
+            this.files.push(new rRem(null, "quest\\rem\\rem_000000"));
+            break;
+        case rSupplyList.prototype.file_type:
+            this.files.push(new rSupplyList(null, "quest\\supp\\supp_1010001"));
+            break;
+    }
+    this.loadFile();
 }
 
 var rQuestData = function (raw_data, file_name) {
     this.file_name = file_name;
     this.quests = [];
+    if (raw_data == null) {
+        var raw_data = new ArrayBuffer(0x530);
+        var view = new DataView(raw_data);
+        view.setUint32(4, 1010001, true);
+        view.setUint8(9, 10, true);
+        view.setUint8(0xa, 1, true);
+        view.setUint8(0xc, 1, true);
+        view.setUint32(0x130, rGUIMessage.prototype.file_type, true);
+        view.setUint32(0x174, rSetEmMain.prototype.file_type, true);
+        view.setUint32(0x1b8, rSetEmMain.prototype.file_type, true);
+        view.setUint32(0x1fC, rSetEmMain.prototype.file_type, true);
+        view.setUint32(0x240, rSetEmMain.prototype.file_type, true);
+        view.setUint32(0x284, rSetEmMain.prototype.file_type, true);
+        view.setUint32(0x2c8, rEmSetList.prototype.file_type, true);
+        view.setUint32(0x30C, rEmSetList.prototype.file_type, true);
+        view.setUint32(0x350, rEmSetList.prototype.file_type, true);
+        view.setUint32(0x394, rRem.prototype.file_type, true);
+        view.setUint32(0x3d8, rRem.prototype.file_type, true);
+        view.setUint32(0x41C, rRem.prototype.file_type, true);
+        view.setUint32(0x460, rRem.prototype.file_type, true);
+        view.setUint32(0x4a4, rRem.prototype.file_type, true);
+        view.setUint32(0x4e8, rSupplyList.prototype.file_type, true);
+        this.quests.push(raw_data);
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var count = view.getUint32(4, true);
@@ -499,8 +590,11 @@ rQuestData.prototype.loadFile = function () {
 
 var rGUIMessage = function (raw_data, file_name) {
     this.file_name = file_name;
-    this.messages = [];
-    this.internal_name = "";
+    this.internal_name = "questData_1010001";
+    this.messages = ["", "", "", "", "", "", "", ""];
+    if (raw_data == null) {
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var version = view.getUint32(4, true);
@@ -528,8 +622,8 @@ var rGUIMessage = function (raw_data, file_name) {
     if (messages.length != message_count) {
         return; // error: invalid message count
     }
-    this.messages = messages;
     this.internal_name = name;
+    this.messages = messages;
 }
 
 rGUIMessage.prototype.file_type = 0x242bb29a;
@@ -618,6 +712,10 @@ rGUIMessage.prototype.loadFile = function () {
 var rSetEmMain = function (raw_data, file_name) {
     this.file_name = file_name;
     this.spawns = [];
+    if (raw_data == null) {
+        this.spawns.push(new ArrayBuffer(0x18));
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var count = view.getUint32(4, true);
@@ -663,6 +761,12 @@ rSetEmMain.prototype.loadFile = function () {
 var rEmSetList = function (raw_data, file_name) {
     this.file_name = file_name;
     this.areas = [];
+    for (var i = 0; i < 20; i++) {
+        this.areas.push(new rEmSetData(null, 0, i));
+    }
+    if (raw_data == null) {
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var version = view.getUint32(4, true);
@@ -674,10 +778,8 @@ var rEmSetList = function (raw_data, file_name) {
     }
     for (var i = 0; i < 20; i++) {
         var offset = view.getUint32(i * 4 + 8, true);
-        if (offset == 0) {
-            this.areas.push(null);
-        } else {
-            this.areas.push(new rEmSetData(raw_data, offset));
+        if (offset != 0) {
+            this.areas[i] = new rEmSetData(raw_data, offset, i);
         }
     }
 }
@@ -691,7 +793,7 @@ rEmSetList.prototype.getRaw = function () {
     view.setUint32(4, 0, true);
     for (var i = 0; i < 20; i++) {
         view = new DataView(buffer, 8 + i * 4);
-        if (this.areas[i] === null) {
+        if (this.areas[i].spawns.length == 0) {
             view.setUint32(0, 0, true);
         } else {
             view.setUint32(0, buffer.byteLength, true);
@@ -713,22 +815,17 @@ rEmSetList.prototype.loadFile = function () {
     document.getElementById("rem").className = "hidden";
     document.getElementById("supply_list").className = "hidden";
     for (var i = 0; i < 20; i++) {
-        var table = document.getElementById("em_set_list").getElementsByTagName("table")[i];
-        table.className = "hidden";
-        var table_body = table.getElementsByTagName("tbody")[0];
-        while (table_body.firstElementChild) {
-            table_body.removeChild(table_body.firstElementChild);
-        }
-        if (this.areas[i] !== null) {
-            this.areas[i].loadFile(table_body);
-            table.removeAttribute("class");
-        }
+        this.areas[i].loadFile();
     }
     document.getElementById("em_set_list").removeAttribute("class");
 }
 
-var rEmSetData = function (raw_data, raw_offset) {
+var rEmSetData = function (raw_data, raw_offset, area_index) {
+    this.area_index = area_index;
     this.spawns = [];
+    if (raw_data == null) {
+        return;
+    }
     var view = new DataView(raw_data, raw_offset);
     var magic = view.getUint32(0, true);
     var version = view.getUint32(4, true);
@@ -758,7 +855,11 @@ rEmSetData.prototype.getRaw = function () {
     return buffer;
 }
 
-rEmSetData.prototype.loadFile = function (table_body) {
+rEmSetData.prototype.loadFile = function () {
+    var table_body = document.getElementById("em_set_list").getElementsByTagName("tbody")[this.area_index];
+    while (table_body.firstElementChild) {
+        table_body.removeChild(table_body.firstElementChild);
+    }
     for (var i = 0; i < this.spawns.length; i++) {
         var new_row = table_body.appendChild(document.createElement("tr"));
         var new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("select"));
@@ -767,12 +868,35 @@ rEmSetData.prototype.loadFile = function (table_body) {
         new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
         new_element.type = "text";
         linkInput(new_element, "hex", this.spawns[i], 4, 36);
+        new_element = new_row.appendChild(document.createElement("td")).appendChild(document.createElement("input"));
+        new_element.type = "button";
+        new_element.value = " - ";
+        new_element.onclick = function (event) {
+            var rows = document.getElementById("em_set_list").getElementsByTagName("tbody")[this.area_index].getElementsByTagName("tr");
+            var current_row = event.currentTarget.parentElement.parentElement;
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i] === current_row) {
+                    this.spawns.splice(i, 1);
+                    this.loadFile();
+                    break;
+                }
+            }
+        }.bind(this);
     }
+    var table_footer = document.getElementById("em_set_list").getElementsByTagName("tfoot")[this.area_index];
+    table_footer.getElementsByTagName("input")[0].onclick = function (event) {
+        this.spawns.push(new ArrayBuffer(0x28));
+        this.loadFile();
+    }.bind(this);
 }
 
 var rRem = function (raw_data, file_name) {
     this.file_name = file_name;
     this.rewards = [];
+    if (raw_data == null) {
+        this.rewards.push(new ArrayBuffer(0xb0));
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var count = view.getUint32(4, true);
@@ -825,6 +949,10 @@ rRem.prototype.loadFile = function () {
 var rSupplyList = function (raw_data, file_name) {
     this.file_name = file_name;
     this.supplies = [];
+    if (raw_data == null) {
+        this.supplies.push(new ArrayBuffer(0xa0));
+        return;
+    }
     var view = new DataView(raw_data);
     var magic = view.getUint32(0, true);
     var count = view.getUint32(4, true);
@@ -871,8 +999,29 @@ rSupplyList.prototype.loadFile = function () {
 var archive = null;
 
 window.onload = function () {
-    document.getElementById("open").onchange = open_file;
-    document.getElementById("save").onclick = save_file;
+    document.getElementById("new").onclick = function (event) {
+        archive = new rArchive(null);
+        archive.loadFile();
+        document.getElementById("save").removeAttribute("disabled");
+    };
+    document.getElementById("open").onchange = function (event) {
+        var file = new FileReader();
+        file.onload = function (event) {
+            archive = new rArchive(this.result);
+            archive.loadFile();
+            document.getElementById("save").removeAttribute("disabled");
+        };
+        file.readAsArrayBuffer(this.files[0]);
+    };
+    document.getElementById("save").onclick = function (event) {
+        if (archive !== null) {
+            saveAs(new Blob([archive.getRaw()], {"type": "application/octet-stream"}), "output.arc");
+        }
+    };
+    document.getElementById("add").onclick = function (event) {
+        archive.addFile(document.getElementById("file_type").value);
+    };
+    fillSelect(document.getElementById("file_type"), file_type_list);
     fillSelect(document.getElementById("mQuestNo"), quest_id_list);
     fillSelect(document.getElementById("mQuestType"), quest_type_list);
     fillSelect(document.getElementById("mRequestVillage"), village_list);
@@ -934,21 +1083,6 @@ window.onload = function () {
     selects = document.getElementById("supply_list").getElementsByTagName("tbody")[0].getElementsByTagName("select");
     for (var i = 0; i < selects.length; i++) {
         selects[i].parentElement.replaceChild(template.cloneNode(true), selects[i]);
-    }
-}
-
-function open_file() {
-    var file = new FileReader();
-    file.onload = function () {
-        archive = new rArchive(this.result);
-        archive.loadFile();
-    };
-    file.readAsArrayBuffer(this.files[0]);
-}
-
-function save_file() {
-    if (archive !== null) {
-        saveAs(new Blob([archive.getRaw()], {"type": "application/octet-stream"}), "output.arc");
     }
 }
 

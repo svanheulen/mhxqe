@@ -28,17 +28,25 @@ tr:nth-child(even) {
 
 #quest_data th, #gui_message th, #set_em_main th {
     text-align: right;
+}
+
+#archive tbody td,
+#quest_data th,
+#gui_message th,
+#set_em_main th,
+#em_set_list tbody td:first-child, #em_set_list tbody td:last-child,
+#rem table:last-child tbody td:first-child,
+#supply_list tbody td:first-child {
     width: 1%;
     white-space: nowrap;
 }
 
-#archive tr td:last-child, #em_set_list tr td:first-child, #rem table:last-child tr td:first-child, #supply_list tr td:first-child {
-    width: 1%;
-    white-space: nowrap;
-}
-
-input[type="number"], input[type="text"], textarea {
+#archive tbody td:nth-child(2), input[type="number"], input[type="text"], textarea {
     width: 99%;
+}
+
+textarea {
+    resize: none;
 }
 
 h1 {
