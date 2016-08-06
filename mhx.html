@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="default.css">
+        <script src="pako.min.js" type="text/javascript"></script>
+        <script src="filesaver.min.js" type="text/javascript"></script>
+        <script src="mhx_lists.js" type="text/javascript"></script>
+        <script src="mhx_editor.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Monster Hunter X Quest Editor</h1>
+            <input type="button" id="new" value="New...">
+            <input type="file" id="open" accept=".arc">
+            <input type="button" id="save" value="Save..." disabled="true">
+        </header>
+        <section id="archive" class="hidden">
+            <h1>Archive Files</h1>
+            <table>
+                <thead>
+                    <tr><th>Type</th><th>Name</th><th>Edit</th><th>Remove</th><th>Move Up</th><th>Move Down</th></tr>
+                </thead>
+                <tfoot>
+                    <tr><td><select id="file_type"></select></td><td colspan="5"><input type="button" id="add" value="Add File"></td></tr>
+                </tfoot>
+                <tbody></tbody>
+            </table>
+        </section>
+        <section id="quest_data" class="hidden">
+            <h1>Quest Details</h1>
+            <table>
+                <tr><th>Index</th><td><input type="number" id="mIndex"></td></tr>
+                <tr><th>ID</th><td><select id="mQuestNo"></select></td></tr>
+                <tr><th>Type</th><td><select id="mQuestType"></select></td></tr>
+                <tr><th>Village</th><td><select id="mRequestVillage"></select></td></tr>
+                <tr><th>Star</th><td><select id="mQuestLv"></select></td></tr>
+                <tr><th>Rank</th><td><select id="mMonsterLv"></select></td></tr>
+                <tr><th>Location</th><td><select id="mMapNo"></select></td></tr>
+                <tr><th>Start Area</th><td><select id="mStartType"></select></td></tr>
+                <tr><th>Time</th><td><input type="number" id="mQuestTime"></td></tr>
+                <tr><th>Defeats</th><td><input type="number" id="mQuestLife"></td></tr>
+                <tr><th>Ac Equip Set No?</th><td><input type="number" id="mAcEquipSetNo"></td></tr>
+                <tr><th>BGM Type?</th><td><input type="number" id="mBGMType"></td></tr>
+                <tr><th>Requirement 1</th><td><select id="mEntryType_1"></select></td></tr>
+                <tr><th>Requirement 2</th><td><select id="mEntryType_2"></select></td></tr>
+                <tr><th>Entry Type Combo?</th><td><input type="number" id="mEntryType_Combo"></td></tr>
+                <tr><th>Urgent</th><td><input type="checkbox" id="mIsEmergency"></td></tr>
+                <tr><th>Random Appear?</th><td><input type="checkbox" id="mIsRandomAppear"></td></tr>
+                <tr><th>Clear Random Appear?</th><td><input type="checkbox" id="mIsClearRandomAppear"></td></tr>
+                <tr><th>Intruder</th><td><input type="checkbox" id="mIsIntrude"></td></tr>
+                <tr><th>Repel</th><td><input type="checkbox" id="mIsRepulse"></td></tr>
+                <tr><th>Time Up Clear</th><td><input type="checkbox" id="mIsClearTimeup"></td></tr>
+                <tr><th>Quick Return</th><td><input type="checkbox" id="mIsReturn20Sec"></td></tr>
+                <tr><th>No Credit?</th><td><input type="checkbox" id="mIsNoCountQuest"></td></tr>
+                <tr><th>Veggie Elder</th><td><input type="checkbox" id="mIsAppearJiji"></td></tr>
+                <tr><th>Transpurrter</th><td><input type="checkbox" id="mIsAppearNyan"></td></tr>
+                <tr><th>Permanent Urgent</th><td><input type="checkbox" id="mIsExtraQuest"></td></tr>
+                <tr><th>Repel Only</th><td><input type="checkbox" id="mIsRepulseNotKill"></td></tr>
+                <tr><th>Clear Type</th><td><input type="number" id="mClearType"></td></tr>
+                <tr><th>Repel HP</th><td><input type="number" id="mGekitaiHp"></td></tr>
+                <tr><th>Main Objective 1 Type</th><td><select id="mIsClearParam_1"></select></td></tr>
+                <tr><th>Main Objective 1 Target</th><td><select id="mClearID_1"></select></td></tr>
+                <tr><th>Main Objective 1 Count</th><td><input type="number" id="mClearNum_1"></td></tr>
+                <tr><th>Main Objective 2 Type</th><td><select id="mClearParam_2"></select></td></tr>
+                <tr><th>Main Objective 2 Target</th><td><select id="mClearID_2"></select></td></tr>
+                <tr><th>Main Objective 2 Count</th><td><input type="number" id="mClearNum_2"></td></tr>
+                <tr><th>Subquest Type</th><td><select id="mSubClearType"></select></td></tr>
+                <tr><th>Subquest Target</th><td><select id="mClearID_Sub"></select></td></tr>
+                <tr><th>Subquest Count</th><td><input type="number" id="mClearNum_Sub"></td></tr>
+                <tr><th>Monster Carve Level</th><td><input type="number" id="mHagiLv"></td></tr>
+                <tr><th>Mining Level</th><td><input type="number" id="mPickLv"></td></tr>
+                <tr><th>Fishing Level</th><td><input type="number" id="mFishingLv"></td></tr>
+                <tr><th>Fee</th><td><input type="number" id="mContract"></td></tr>
+                <tr><th>Village Points</th><td><input type="number" id="mVillagePoint"></td></tr>
+                <tr><th>Main Objective Reward</th><td><input type="number" id="mRemMoney"></td></tr>
+                <tr><th>Subquest Reward</th><td><input type="number" id="mSubRemMoney"></td></tr>
+                <tr><th>Main Objective Academy Points</th><td><input type="number" id="mClearRemVillagePoint"></td></tr>
+                <tr><th>Failed Academy Points?</th><td><input type="number" id="mFailedRemVillagePoint"></td></tr>
+                <tr><th>Subquest Academy Points</th><td><input type="number" id="mSubRemVillagePoint"></td></tr>
+                <tr><th>Main Objective HR</th><td><input type="number" id="mClearRemHuterPoint"></td></tr>
+                <tr><th>Subquest HR</th><td><input type="number" id="mSubRemHuterPoint"></td></tr>
+                <tr><th>Rem Add Frame 1?</th><td><input type="number" id="mRemAddFrame_1"></td></tr>
+                <tr><th>Rem Add Frame 2?</th><td><input type="number" id="mRemAddFrame_2"></td></tr>
+                <tr><th>Rem Add Lot Max?</th><td><input type="number" id="mRemAddLotMax"></td></tr>
+                <tr><th>Supply Delivery 1 Label</th><td><input type="number" id="mSuppLabel_1"></td></tr>
+                <tr><th>Supply Delivery 1 Type</th><td><select id="mSuppType_1"></select></td></tr>
+                <tr><th>Supply Delivery 1 Target</th><td><select id="mSuppTarget_1"></select></td></tr>
+                <tr><th>Supply Delivery 1 Count</th><td><input type="number" id="mSuppTargetNum_1"></td></tr>
+                <tr><th>Supply Delivery 2 Label</th><td><input type="number" id="mSuppLabel_2"></td></tr>
+                <tr><th>Supply Delivery 2 Type</th><td><select id="mSuppType_2"></select></td></tr>
+                <tr><th>Supply Delivery 2 Target</th><td><select id="mSuppTarget_2"></select></td></tr>
+                <tr><th>Supply Delivery 2 Count</th><td><input type="number" id="mSuppTargetNum_2"></td></tr>
+                <tr><th>Boss Monster 1 Type</th><td><select id="mEmType_1"></select></td></tr>
+                <tr><th>Boss Monster 1 Subtype</th><td><input type="number" id="mEmSubType_1"></td></tr>
+                <tr><th>Boss Monster 1 Aura Type</th><td><input type="number" id="mAuraType_1"></td></tr>
+                <tr><th>Boss Monster 1 Restore Count</th><td><input type="number" id="mRestoreNum_1"></td></tr>
+                <tr><th>Boss Monster 1 Vital Table</th><td><input type="number" id="mVitalTblNo_1"></td></tr>
+                <tr><th>Boss Monster 1 Attack Table</th><td><input type="number" id="mAttackTblNo_1"></td></tr>
+                <tr><th>Boss Monster 1 Other Table</th><td><input type="number" id="mOtherTblNo_1"></td></tr>
+                <tr><th>Boss Monster 1 Difficulty</th><td><input type="number" id="mDifficulty_1"></td></tr>
+                <tr><th>Boss Monster 1 Scale</th><td><input type="number" id="mScale_1"></td></tr>
+                <tr><th>Boss Monster 1 Scale Table</th><td><input type="number" id="mScaleTbl_1"></td></tr>
+                <tr><th>Boss Monster 1 Stamina Table</th><td><input type="number" id="mStaminaTbl_1"></td></tr>
+                <tr><th>Boss Monster 2 Type</th><td><select id="mEmType_2"></select></td></tr>
+                <tr><th>Boss Monster 2 Subtype</th><td><input type="number" id="mEmSubType_2"></td></tr>
+                <tr><th>Boss Monster 2 Aura Type</th><td><input type="number" id="mAuraType_2"></td></tr>
+                <tr><th>Boss Monster 2 Restore Count</th><td><input type="number" id="mRestoreNum_2"></td></tr>
+                <tr><th>Boss Monster 2 Vital Table</th><td><input type="number" id="mVitalTblNo_2"></td></tr>
+                <tr><th>Boss Monster 2 Attack Table</th><td><input type="number" id="mAttackTblNo_2"></td></tr>
+                <tr><th>Boss Monster 2 Other Table</th><td><input type="number" id="mOtherTblNo_2"></td></tr>
+                <tr><th>Boss Monster 2 Difficulty</th><td><input type="number" id="mDifficulty_2"></td></tr>
+                <tr><th>Boss Monster 2 Scale</th><td><input type="number" id="mScale_2"></td></tr>
+                <tr><th>Boss Monster 2 Scale Table</th><td><input type="number" id="mScaleTbl_2"></td></tr>
+                <tr><th>Boss Monster 2 Stamina Table</th><td><input type="number" id="mStaminaTbl_2"></td></tr>
+                <tr><th>Boss Monster 3 Type</th><td><select id="mEmType_3"></select></td></tr>
+                <tr><th>Boss Monster 3 Subtype</th><td><input type="number" id="mEmSubType_3"></td></tr>
+                <tr><th>Boss Monster 3 Aura Type</th><td><input type="number" id="mAuraType_3"></td></tr>
+                <tr><th>Boss Monster 3 Restore Count</th><td><input type="number" id="mRestoreNum_3"></td></tr>
+                <tr><th>Boss Monster 3 Vital Table</th><td><input type="number" id="mVitalTblNo_3"></td></tr>
+                <tr><th>Boss Monster 3 Attack Table</th><td><input type="number" id="mAttackTblNo_3"></td></tr>
+                <tr><th>Boss Monster 3 Other Table</th><td><input type="number" id="mOtherTblNo_3"></td></tr>
+                <tr><th>Boss Monster 3 Difficulty</th><td><input type="number" id="mDifficulty_3"></td></tr>
+                <tr><th>Boss Monster 3 Scale</th><td><input type="number" id="mScale_3"></td></tr>
+                <tr><th>Boss Monster 3 Scale Table</th><td><input type="number" id="mScaleTbl_3"></td></tr>
+                <tr><th>Boss Monster 3 Stamina Table</th><td><input type="number" id="mStaminaTbl_3"></td></tr>
+                <tr><th>Boss Monster 4 Type</th><td><select id="mEmType_4"></select></td></tr>
+                <tr><th>Boss Monster 4 Subtype</th><td><input type="number" id="mEmSubType_4"></td></tr>
+                <tr><th>Boss Monster 4 Aura Type</th><td><input type="number" id="mAuraType_4"></td></tr>
+                <tr><th>Boss Monster 4 Restore Count</th><td><input type="number" id="mRestoreNum_4"></td></tr>
+                <tr><th>Boss Monster 4 Vital Table</th><td><input type="number" id="mVitalTblNo_4"></td></tr>
+                <tr><th>Boss Monster 4 Attack Table</th><td><input type="number" id="mAttackTblNo_4"></td></tr>
+                <tr><th>Boss Monster 4 Other Table</th><td><input type="number" id="mOtherTblNo_4"></td></tr>
+                <tr><th>Boss Monster 4 Difficulty</th><td><input type="number" id="mDifficulty_4"></td></tr>
+                <tr><th>Boss Monster 4 Scale</th><td><input type="number" id="mScale_4"></td></tr>
+                <tr><th>Boss Monster 4 Scale Table</th><td><input type="number" id="mScaleTbl_4"></td></tr>
+                <tr><th>Boss Monster 4 Stamina Table</th><td><input type="number" id="mStaminaTbl_4"></td></tr>
+                <tr><th>Boss Monster 5 Type</th><td><select id="mEmType_5"></select></td></tr>
+                <tr><th>Boss Monster 5 Subtype</th><td><input type="number" id="mEmSubType_5"></td></tr>
+                <tr><th>Boss Monster 5 Aura Type</th><td><input type="number" id="mAuraType_5"></td></tr>
+                <tr><th>Boss Monster 5 Restore Count</th><td><input type="number" id="mRestoreNum_5"></td></tr>
+                <tr><th>Boss Monster 5 Vital Table</th><td><input type="number" id="mVitalTblNo_5"></td></tr>
+                <tr><th>Boss Monster 5 Attack Table</th><td><input type="number" id="mAttackTblNo_5"></td></tr>
+                <tr><th>Boss Monster 5 Other Table</th><td><input type="number" id="mOtherTblNo_5"></td></tr>
+                <tr><th>Boss Monster 5 Difficulty</th><td><input type="number" id="mDifficulty_5"></td></tr>
+                <tr><th>Boss Monster 5 Scale</th><td><input type="number" id="mScale_5"></td></tr>
+                <tr><th>Boss Monster 5 Scale Table</th><td><input type="number" id="mScaleTbl_5"></td></tr>
+                <tr><th>Boss Monster 5 Stamina Table</th><td><input type="number" id="mStaminaTbl_5"></td></tr>
+                <tr><th>Small Monster HP</th><td><input type="number" id="mZakoHP"></td></tr>
+                <tr><th>Small Monster Attack</th><td><input type="number" id="mZakoAttack"></td></tr>
+                <tr><th>Small Monster Other</th><td><input type="number" id="mZakoOther"></td></tr>
+                <tr><th>No Small Monsters</th><td><input type="checkbox" id="mNoZako"></td></tr>
+                <tr><th>Small Mosnter Set 2 Condition Type</th><td><select id="mEmSetType_2"></select></td></tr>
+                <tr><th>Small Monster Set 2 Condition Target</th><td><select id="mEmSetTargetID_2"></select></td></tr>
+                <tr><th>Small Monster Set 2 Condition Count</th><td><input type="number" id="mEmSetTargetNum_2"></td></tr>
+                <tr><th>Small Mosnter Set 3 Condition Type</th><td><select id="mEmSetType_3"></select></td></tr>
+                <tr><th>Small Monster Set 3 Condition Target</th><td><select id="mEmSetTargetID_3"></select></td></tr>
+                <tr><th>Small Monster Set 3 Condition Count</th><td><input type="number" id="mEmSetTargetNum_3"></td></tr>
+                <tr><th>Boss Spawn Type</th><td><input type="number" id="mBossRushType"></td></tr>
+                <tr><th>Boss 1 Condition Type</th><td><select id="mAppearType_1"></select></td></tr>
+                <tr><th>Boss 1 Condition Target</th><td><select id="mAppearTargetType_1"></select></td></tr>
+                <tr><th>Boss 1 Condition Count</th><td><input type="number" id="mAppearTargetNum_1"></td></tr>
+                <tr><th>Boss 2 Condition Type</th><td><select id="mAppearType_2"></select></td></tr>
+                <tr><th>Boss 2 Condition Target</th><td><select id="mAppearTargetType_2"></select></td></tr>
+                <tr><th>Boss 2 Condition Count</th><td><input type="number" id="mAppearTargetNum_2"></td></tr>
+                <tr><th>Intruder Chance</th><td><input type="number" id="mExtraRand"></td></tr>
+                <tr><th>Intruder Start Time</th><td><input type="number" id="mExtraStartTime"></td></tr>
+                <tr><th>Intruder Start Random</th><td><input type="number" id="mExtraStartRand"></td></tr>
+                <tr><th>Intruder 3 Limit</th><td><input type="number" id="mExtraLimit_3"></td></tr>
+                <tr><th>Intruder 4 Limit</th><td><input type="number" id="mExtraLimit_4"></td></tr>
+                <tr><th>Intruder 5 Limit</th><td><input type="number" id="mExtraLimit_5"></td></tr>
+                <tr><th>Intruder 3 Chance</th><td><input type="number" id="mExtraRand_3"></td></tr>
+                <tr><th>Intruder 4 Chance</th><td><input type="number" id="mExtraRand_4"></td></tr>
+                <tr><th>Intruder 5 Chance</th><td><input type="number" id="mExtraRand_5"></td></tr>
+                <tr><th>Dragonator</th><td><input type="checkbox" id="mIsGekiryu"></td></tr>
+                <tr><th>Arena Fence</th><td><input type="checkbox" id="mIsRail"></td></tr>
+                <tr><th>Arena Fence Closed</th><td><input type="checkbox" id="mIsRailStart"></td></tr>
+                <tr><th>Arena Fence Open Time</th><td><input type="number" id="mRailOpenTime"></td></tr>
+                <tr><th>Arena Fence Start Time</th><td><input type="number" id="mRailStartTime"></td></tr>
+                <tr><th>Arena Fence Reuse Time</th><td><input type="number" id="mRailReuseTime"></td></tr>
+                <tr><th>Dragonator Start Time</th><td><input type="number" id="mGekiryuStartTime"></td></tr>
+                <tr><th>Dragonator Reuse Time</th><td><input type="number" id="mGekiryuReuseTime"></td></tr>
+                <tr><th>Icon 1</th><td><select id="mIcon_1"></select></td></tr>
+                <tr><th>Icon 2</th><td><select id="mIcon_2"></select></td></tr>
+                <tr><th>Icon 3</th><td><select id="mIcon_3"></select></td></tr>
+                <tr><th>Icon 4</th><td><select id="mIcon_4"></select></td></tr>
+                <tr><th>Icon 5</th><td><select id="mIcon_5"></select></td></tr>
+                <tr><th>Prog Number?</th><td><input type="number" id="mProgNo"></td></tr>
+                <tr><th>Messages File Type</th><td><select id="mMessage_type" disabled="true"></select></td></tr>
+                <tr><th>Messages File Name</th><td><input type="text" id="mMessage_name"></td></tr>
+                <tr><th>Boss 1 File Type</th><td><select id="mBossSetRes_1_type" disabled="true"></select></td></tr>
+                <tr><th>Boss 1 File Name</th><td><input type="text" id="mBossSetRes_1_name"></td></tr>
+                <tr><th>Boss 2 File Type</th><td><select id="mBossSetRes_2_type" disabled="true"></select></td></tr>
+                <tr><th>Boss 2 File Name</th><td><input type="text" id="mBossSetRes_2_name"></td></tr>
+                <tr><th>Boss 3 File Type</th><td><select id="mBossSetRes_3_type" disabled="true"></select></td></tr>
+                <tr><th>Boss 3 File Name</th><td><input type="text" id="mBossSetRes_3_name"></td></tr>
+                <tr><th>Boss 4 File Type</th><td><select id="mBossSetRes_4_type" disabled="true"></select></td></tr>
+                <tr><th>Boss 4 File Name</th><td><input type="text" id="mBossSetRes_4_name"></td></tr>
+                <tr><th>Boss 5 File Type</th><td><select id="mBossSetRes_5_type" disabled="true"></select></td></tr>
+                <tr><th>Boss 5 File Name</th><td><input type="text" id="mBossSetRes_5_name"></td></tr>
+                <tr><th>Small Monsters 1 File Type</th><td><select id="mEmSetListRes_1_type" disabled="true"></select></td></tr>
+                <tr><th>Small Monsters 1 File Name</th><td><input type="text" id="mEmSetListRes_1_name"></td></tr>
+                <tr><th>Small Monsters 2 File Type</th><td><select id="mEmSetListRes_2_type" disabled="true"></select></td></tr>
+                <tr><th>Small Monsters 2 File Name</th><td><input type="text" id="mEmSetListRes_2_name"></td></tr>
+                <tr><th>Small Monsters 3 File Type</th><td><select id="mEmSetListRes_3_type" disabled="true"></select></td></tr>
+                <tr><th>Small Monsters 3 File Name</th><td><input type="text" id="mEmSetListRes_3_name"></td></tr>
+                <tr><th>Reward Box 1 File Type</th><td><select id="mRemTbl_1_type" disabled="true"></select></td></tr>
+                <tr><th>Reward Box 1 File Name</th><td><input type="text" id="mRemTbl_1_name"></td></tr>
+                <tr><th>Reward Box 2 File Type</th><td><select id="mRemTbl_2_type" disabled="true"></select></td></tr>
+                <tr><th>Reward Box 2 File Name</th><td><input type="text" id="mRemTbl_2_name"></td></tr>
+                <tr><th>Reward Box 3 File Type</th><td><select id="mRemTbl_Add1_type" disabled="true"></select></td></tr>
+                <tr><th>Reward Box 3 File Name</th><td><input type="text" id="mRemTbl_Add1_name"></td></tr>
+                <tr><th>Reward Box 4 File Type</th><td><select id="mRemTbl_Add2_type" disabled="true"></select></td></tr>
+                <tr><th>Reward Box 4 File Name</th><td><input type="text" id="mRemTbl_Add2_name"></td></tr>
+                <tr><th>Reward Box 5 File Type</th><td><select id="mRemTbl_Sub_type" disabled="true"></select></td></tr>
+                <tr><th>Reward Box 5 File Name</th><td><input type="text" id="mRemTbl_Sub_name"></td></tr>
+                <tr><th>Supply Box File Type</th><td><select id="mSuppTbl_type" disabled="true"></select></td></tr>
+                <tr><th>Supply Box File Name</th><td><input type="text" id="mSuppTbl_name"></td></tr>
+                <tr><th>Special Permit Count</th><td><input type="number" id="mExtraTicketNum"></td></tr>
+            </table>
+        </section>
+        <section id="gui_message" class="hidden">
+            <h1>Quest Board Text</h1>
+            <table>
+                <tr><th>Internal Name</th><td><input type="text" id="internal_name"></td></tr>
+                <tr><th>Unknown</th><td><input type="text" id="unknown"></td></tr>
+                <tr><th>Title</th><td><input type="text" id="title"></td></tr>
+                <tr><th>Main Objective</th><td><textarea id="main_objective"></textarea></td></tr>
+                <tr><th>Subquest</th><td><input type="text" id="subquest"></td></tr>
+                <tr><th>Main Monsters</th><td><textarea id="main_monsters"></textarea></td></tr>
+                <tr><th>Failure</th><td><textarea id="failure"></textarea></td></tr>
+                <tr><th>Client</th><td><input type="text" id="client"></td></tr>
+                <tr><th>Summary</th><td><textarea id="summary"></textarea></td></tr>
+            </table>
+        </section>
+        <section id="set_em_main" class="hidden">
+            <h1>Large Monster Details</h1>
+            <table>
+                <tr><th>Round Number?</th><td><input type="number" id="mRoundNo"></td></tr>
+                <tr><th>Area</th><td><input type="number" id="mAreaNo"></td></tr>
+                <tr><th>Angle</th><td><input type="number" id="mAngle"></td></tr>
+                <tr><th>X Position</th><td><input type="number" id="mPosX"></td></tr>
+                <tr><th>Y Position</th><td><input type="number" id="mPosY"></td></tr>
+                <tr><th>Z Position</th><td><input type="number" id="mPosZ"></td></tr>
+            </table>
+        </section>
+        <section id="em_set_list" class="hidden">
+            <h1>Small Monster Details</h1>
+            <table><caption>Area 1</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 2</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 3</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 4</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 5</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 6</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 7</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 8</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 9</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 10</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 11</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 12</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 13</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 14</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 15</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 16</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 17</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 18</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 19</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+            <table><caption>Area 20</caption><thead><tr><th>Type</th><th>Unknown</th><th>Remove</th></tr></thead><tfoot><tr><td colspan="3"><input type="button" value="Add Monster"></td></tr></tfoot><tbody></tbody></table>
+        </section>
+        <section id="rem" class="hidden">
+            <h1>Reward Box Details</h1>
+            <table>
+                <thead>
+                    <tr><th>Flag</th><th>Count</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><input type="number"></td><td><input type="number"></td></tr>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr><th>Item ID</th><th>Count</th><th>Chance</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                </tbody>
+            </table>
+        </section>
+        <section id="supply_list" class="hidden">
+            <h1>Supply Box Details</h1>
+            <table>
+                <thead>
+                    <tr><th>Item ID</th><th>Count</th><th>Label</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                    <tr><td><select></select></td><td><input type="number"></td><td><input type="number"></td></tr>
+                </tbody>
+            </table>
+        </section>
+    </body>
+</html>
+

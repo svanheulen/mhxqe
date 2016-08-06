@@ -2,7 +2,7 @@
     display: none;
 }
 
-header, table {
+header, table, #main {
     width: 1000px;
     margin: auto;
     border-spacing: 0;
