@@ -112,6 +112,24 @@ function linkInput(element, type, buffer, offset, length) {
     }
 }
 
+function linkInputSpecial(checkbox, dropdown, buffer, offset) {
+    var item = new Uint8Array(buffer, offset, 1);
+    checkbox.value = (item[0] < 120) ? item[0] : (item[0] - 120);
+    checkbox.checked = (item[0] >= 120) ? 1 : 0;
+    checkbox.onchange = function (event) {
+        if (event.currentTarget.checked == 1) {
+            this[0] = parseInt(event.currentTarget.value, 10) + 120;
+        } else {
+            this[0] = event.currentTarget.value;
+        }
+    }.bind(item);
+    dropdown.value = (item[0] < 120) ? item[0] : (item[0] - 120);
+    dropdown.onchange = function (event) {
+        this.value = event.currentTarget.value;
+        this.dispatchEvent(new Event("change", {}));
+    }.bind(checkbox);
+}
+
 function linkObjective(target, element) {
     target.addEventListener("change", function (event) {
         switch (parseInt(event.currentTarget.value, 10)) {
@@ -547,11 +565,11 @@ rQuestData.prototype.loadFile = function () {
     linkInput(document.getElementById("mRailReuseTime"), "short", this.quests[0], 0x121);
     linkInput(document.getElementById("mGekiryuStartTime"), "short", this.quests[0], 0x123);
     linkInput(document.getElementById("mGekiryuReuseTime"), "short", this.quests[0], 0x125);
-    linkInput(document.getElementById("mIcon_1"), "char", this.quests[0], 0x127);
-    linkInput(document.getElementById("mIcon_2"), "char", this.quests[0], 0x128);
-    linkInput(document.getElementById("mIcon_3"), "char", this.quests[0], 0x129);
-    linkInput(document.getElementById("mIcon_4"), "char", this.quests[0], 0x12a);
-    linkInput(document.getElementById("mIcon_5"), "char", this.quests[0], 0x12b);
+    linkInputSpecial(document.getElementById("mIcon_1_hyper"), document.getElementById("mIcon_1"), this.quests[0], 0x127);
+    linkInputSpecial(document.getElementById("mIcon_2_hyper"), document.getElementById("mIcon_2"), this.quests[0], 0x128);
+    linkInputSpecial(document.getElementById("mIcon_3_hyper"), document.getElementById("mIcon_3"), this.quests[0], 0x129);
+    linkInputSpecial(document.getElementById("mIcon_4_hyper"), document.getElementById("mIcon_4"), this.quests[0], 0x12a);
+    linkInputSpecial(document.getElementById("mIcon_5_hyper"), document.getElementById("mIcon_5"), this.quests[0], 0x12b);
     linkInput(document.getElementById("mProgNo"), "int", this.quests[0], 0x12c);
     linkInput(document.getElementById("mMessage_type"), "int", this.quests[0], 0x130);
     linkInput(document.getElementById("mMessage_name"), "string", this.quests[0], 0x134, 0x40);
