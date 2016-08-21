@@ -345,6 +345,16 @@ rArchive.prototype.addFile = function (file_type) {
     this.loadFile();
 }
 
+rArchive.prototype.getQuestID = function () {
+    for (var i = 0; i < this.files.length; i++) {
+        if (this.files[i].file_type == rQuestData.prototype.file_type && this.files[i].quests.length > 0) {
+            var view = new DataView(this.files[i].quests[0]);
+            return view.getUint32(4, true);
+        }
+    }
+    return -1;
+}
+
 var rQuestData = function (raw_data, file_name) {
     this.file_name = file_name;
     this.quests = [];
@@ -391,7 +401,7 @@ var rQuestData = function (raw_data, file_name) {
 
 rQuestData.prototype.file_type = 0x1bbfd18e;
 
-rQuestData.prototype.getRaw = function() {
+rQuestData.prototype.getRaw = function () {
     var buffer = new ArrayBuffer(8 + this.quests.length * 0x640);
     var view = new DataView(buffer);
     view.setUint32(0, 0x4348999a, true);
@@ -1045,7 +1055,11 @@ window.onload = function () {
     };
     document.getElementById("save").onclick = function (event) {
         if (archive !== null) {
-            saveAs(new Blob([archive.getRaw()], {"type": "application/octet-stream"}), "output.arc");
+            var quest_file_name = "output.arc";
+            var quest_id = archive.getQuestID();
+            if (quest_id != -1)
+                quest_file_name = "q" + quest_id + ".arc"
+            saveAs(new Blob([archive.getRaw()], {"type": "application/octet-stream"}), quest_file_name);
         }
     };
     document.getElementById("add").onclick = function (event) {
