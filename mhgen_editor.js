@@ -112,7 +112,7 @@ function linkInput(element, type, buffer, offset, length) {
     }
 }
 
-function linkInputSpecial(checkbox, dropdown, buffer, offset) {
+function linkIcon(checkbox, select, buffer, offset) {
     var item = new Uint8Array(buffer, offset, 1);
     checkbox.value = (item[0] < 120) ? item[0] : (item[0] - 120);
     checkbox.checked = (item[0] >= 120) ? 1 : 0;
@@ -123,8 +123,8 @@ function linkInputSpecial(checkbox, dropdown, buffer, offset) {
             this[0] = event.currentTarget.value;
         }
     }.bind(item);
-    dropdown.value = (item[0] < 120) ? item[0] : (item[0] - 120);
-    dropdown.onchange = function (event) {
+    select.value = (item[0] < 120) ? item[0] : (item[0] - 120);
+    select.onchange = function (event) {
         this.value = event.currentTarget.value;
         this.dispatchEvent(new Event("change", {}));
     }.bind(checkbox);
@@ -569,11 +569,11 @@ rQuestData.prototype.loadFile = function () {
     linkInput(document.getElementById("mRailReuseTime"), "short", this.quests[0], 0x121);
     linkInput(document.getElementById("mGekiryuStartTime"), "short", this.quests[0], 0x123);
     linkInput(document.getElementById("mGekiryuReuseTime"), "short", this.quests[0], 0x125);
-    linkInputSpecial(document.getElementById("mIcon_1_hyper"), document.getElementById("mIcon_1"), this.quests[0], 0x127);
-    linkInputSpecial(document.getElementById("mIcon_2_hyper"), document.getElementById("mIcon_2"), this.quests[0], 0x128);
-    linkInputSpecial(document.getElementById("mIcon_3_hyper"), document.getElementById("mIcon_3"), this.quests[0], 0x129);
-    linkInputSpecial(document.getElementById("mIcon_4_hyper"), document.getElementById("mIcon_4"), this.quests[0], 0x12a);
-    linkInputSpecial(document.getElementById("mIcon_5_hyper"), document.getElementById("mIcon_5"), this.quests[0], 0x12b);
+    linkIcon(document.getElementById("mIcon_1_hyper"), document.getElementById("mIcon_1"), this.quests[0], 0x127);
+    linkIcon(document.getElementById("mIcon_2_hyper"), document.getElementById("mIcon_2"), this.quests[0], 0x128);
+    linkIcon(document.getElementById("mIcon_3_hyper"), document.getElementById("mIcon_3"), this.quests[0], 0x129);
+    linkIcon(document.getElementById("mIcon_4_hyper"), document.getElementById("mIcon_4"), this.quests[0], 0x12a);
+    linkIcon(document.getElementById("mIcon_5_hyper"), document.getElementById("mIcon_5"), this.quests[0], 0x12b);
     linkInput(document.getElementById("mProgNo"), "int", this.quests[0], 0x12c);
     linkInput(document.getElementById("mMessage_eng_type"), "int", this.quests[0], 0x130);
     linkInput(document.getElementById("mMessage_eng_name"), "string", this.quests[0], 0x134, 0x40);
